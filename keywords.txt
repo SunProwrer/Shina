@@ -1,0 +1,18 @@
+#Названия классов и переменных
+
+Shina KEYWORD1
+Regulator KEYWORD1
+RPMCouner KEYWORD1
+RPMSetter KEYWORD1
+MotorSignalSender KEYWORD1
+IOModule KEYWORD1
+Condition KEYWORD1
+
+#Названия методов и функций
+
+tick KEYWORD2
+setRegulator KEYWORD2
+setRPMCounter KEYWORD2
+setRPMSetter KEYWORD2
+setMotorSignalSender KEYWORD2
+setIOModule KEYWORD2
