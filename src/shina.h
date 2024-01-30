@@ -10,18 +10,18 @@
 class Shina {
     public:
         void tick();
-        void setRegulator(Regulator regulator);
-        void setRPMCounter(RPMCounter counter);
-        void setRPMSetter(RPMSetter setter);
-        void setMotorSignalSender(MotorSignalSender signalSender);
-        void setIOModule(IOModule ioModule);
+        void setRegulator(Regulator& regulator);
+        void setRPMCounter(RPMCounter& counter);
+        void setRPMSetter(RPMSetter& setter);
+        void setMotorSignalSender(MotorSignalSender& signalSender);
+        void setIOModule(IOModule& ioModule);
     private:
         Condition condition;
-        Regulator regulator;
-        RPMCounter counter;
-        RPMSetter setter;
-        MotorSignalSender signalSender;
-        IOModule ioModule;
-}
+        Regulator* regulator;
+        RPMCounter* counter;
+        RPMSetter* setter;
+        MotorSignalSender* signalSender;
+        IOModule* ioModule;
+};
 
 #endif
