@@ -9,6 +9,8 @@
 
 class Shina {
     public:
+        Shina();
+        ~Shina();
         void tick();
         void setRegulator(Regulator& regulator);
         void setRPMCounter(RPMCounter& counter);
