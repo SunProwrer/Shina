@@ -6,6 +6,6 @@ struct Condition
         uint16_t factRPM;
         uint16_t aimRPM;
         uint16_t controlVal;
-        u_int8_t IOSettings;
-        u_int8_t libSettings;
+        uint8_t IOSettings;
+        uint8_t libSettings;
 };
