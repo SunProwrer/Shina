@@ -44,32 +44,35 @@ public:
     }
 
     int16_t getControlVal() {
-        this->countPID();
-        return this->controlSignal;
+        countPID();
+        return controlSignal;
     }
 private:
     void countErr() {
-        this->err = this->aimRPM - this->factRPM;
+        err = aimRPM - factRPM;
     }
     
     void countP() {
-        this->countErr();
-        this->d = this->err;
+        countErr();
+        p = err;
     }
 
     void countI() {
-        this->i += err * dt;
+        i += err * dt;
     }
 
     void countD() {
         static float prevErr = 0;
-        this->d = (err - prevErr) / dt;
+        d = (err - prevErr) / dt;
         prevErr = err;
     }
 
     void countPID() {
         //TODO add map()
-        this->controlSignal = (int16_t)(this->p * this->kp + this->i * this->ki + this->d * this->kd);
+        countP();
+        countI();
+        countD();
+        controlSignal = (int16_t)(p * kp + i * ki + d * kd);
     }
 protected:
     float p, kp;
