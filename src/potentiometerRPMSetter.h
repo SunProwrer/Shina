@@ -1,6 +1,6 @@
 #pragma once
 #include "RPMSetter.h"
-#include <Arduino.h>
+#include <AbstractArduinoCommands.h>
 
 class potentiometerRPMSetter : public RPMSetter {
 public:
@@ -13,7 +13,7 @@ public:
     ~potentiometerRPMSetter() { }
 
     int16_t getAimRPM() {
-        map(analogRead(inputPort), 0, 256, minOutputVal, maxOutputVal);
+        map(readAnalogSignal(inputPort), 0, 256, minOutputVal, maxOutputVal);
     }
 
     void setMinOutputVal(int16_t minOutputVal) {
