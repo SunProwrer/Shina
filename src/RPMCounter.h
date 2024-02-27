@@ -4,6 +4,6 @@
 class RPMCounter {
     public:
         virtual int16_t getFactRPM() = 0;
-    private:
+    protected:
         int16_t factRPM;
 };

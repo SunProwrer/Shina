@@ -24,7 +24,7 @@ public:
         this->maxOutputVal = maxOutputVal;
     }
 protected:
-    uint16_t inputPort;
+    uint8_t inputPort;
     uint16_t minOutputVal;
     uint16_t maxOutputVal;
 };
