@@ -51,8 +51,7 @@ private:
                 }
                 value[i] = 0;
                 int16_t intVal = atoi(value);
-                switch (item)
-                {
+                switch (item) {
                 case 'r':
                     condition.aimRPM = intVal;
                     break;
@@ -70,6 +69,10 @@ private:
                     break;
                 
                 default:
+                    consolePrint("Invalid param: \"");
+                    consolePrint(item);
+                    consolePrint(value);
+                    consolePrintln("\"");
                     break;
                 }
             }
