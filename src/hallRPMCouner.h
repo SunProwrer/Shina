@@ -3,7 +3,8 @@
 #include <AbstractArduinoCommands.h>
 #include "count.h"
 
-extern void foo();
+extern void countRPM();
+extern void setDataPtr(countData& dataPrt);
 
 class hallRPMCouner : public RPMCounter{
 public:
@@ -12,13 +13,16 @@ public:
         this->minOutputVal = 0;
         this->maxOutputVal = 1024;
 
-        attachInterrupt(inputPort, foo, RISING);
+        dataMas.kolMagnetsPerRoute = 6;
+
+        setDataPtr(dataMas);
+        attachInterrupt(digitalPinToInterrupt(inputPort), countRPM, RISING);
     }
 
     ~hallRPMCouner() { }
 
     int16_t getFactRPM() {
-        return map(constrain(factRPM, 0, 10000), 0, 10000, minOutputVal, maxOutputVal);
+        return map(constrain(dataMas.factRPM, 0, 10000), 0, 10000, minOutputVal, maxOutputVal);
     }
 
     void setMinOutputVal(int16_t minOutputVal) {
@@ -30,18 +34,11 @@ public:
     }
 
     void setNumIntPerRoute(uint8_t ints) {
-        kolMagnetsPerRoute = ints;
+        dataMas.kolMagnetsPerRoute = ints;
     }
 protected:
-    void countRPM() {
-        static uint32_t lastTime = 0;
-        uint32_t currentTime = micros();
-        factRPM = (int16_t)(60 / ((float)(currentTime - lastTime) * kolMagnetsPerRoute) * 10000000);
-        lastTime = currentTime;
-    }
-
+    countData dataMas;
     uint8_t inputPort;
-    uint8_t kolMagnetsPerRoute;
     uint16_t minOutputVal;
     uint16_t maxOutputVal;
 };
