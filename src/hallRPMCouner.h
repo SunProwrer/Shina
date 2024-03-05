@@ -1,6 +1,9 @@
 #pragma once
 #include "RPMCounter.h"
 #include <AbstractArduinoCommands.h>
+#include "count.h"
+
+extern void foo();
 
 class hallRPMCouner : public RPMCounter{
 public:
@@ -9,7 +12,7 @@ public:
         this->minOutputVal = 0;
         this->maxOutputVal = 1024;
 
-        attachInterrupt(inputPort, countRPM, RISING);
+        attachInterrupt(inputPort, foo, RISING);
     }
 
     ~hallRPMCouner() { }
@@ -29,11 +32,11 @@ public:
     void setNumIntPerRoute(uint8_t ints) {
         kolMagnetsPerRoute = ints;
     }
-private:
 protected:
     void countRPM() {
         static uint32_t lastTime = 0;
-        factRPM = (int16_t)(60 / ((float)(micros() - lastTime) * kolMagnetsPerRoute) * 10000000);
+        uint32_t currentTime = micros();
+        factRPM = (int16_t)(60 / ((float)(currentTime - lastTime) * kolMagnetsPerRoute) * 10000000);
         lastTime = currentTime;
     }
 
@@ -42,4 +45,3 @@ protected:
     uint16_t minOutputVal;
     uint16_t maxOutputVal;
 };
-

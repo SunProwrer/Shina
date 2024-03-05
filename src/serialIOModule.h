@@ -1,7 +1,7 @@
 #pragma once
 #include "IOModule.h"
 #include "condition.h"
-#include "cstring"
+//#include <cstring.h>
 #include <AbstractArduinoCommands.h>
 
 class serialIOModule : public IOModule{
@@ -42,13 +42,16 @@ private:
     void readCondition() {
         if (Serial.available()) {
             char buf[24];
-            uint8_t kol = Serial.readBytesUntil(';', &buf, 24);
+            uint8_t kol = Serial.readBytesUntil(';', buf, 24);
             for (uint8_t i = 0; i < kol; i++) {
                 char item = buf[i];
                 char value[8];
-                for (uint8_t j = 0; buf[++i] != ','; j++) {
+                uint8_t j;
+                for (j = 0; buf[++i] != ','; j++) {
                     value[j] = buf[i];
                 }
+                if (j == 0) continue;
+                
                 value[i] = 0;
                 int16_t intVal = atoi(value);
                 switch (item) {

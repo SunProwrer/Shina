@@ -13,7 +13,7 @@ public:
     ~potentiometerRPMSetter() { }
 
     int16_t getAimRPM() {
-        map(readAnalogSignal(inputPort), 0, 256, minOutputVal, maxOutputVal);
+        return map(readAnalogSignal(inputPort), 0, 256, minOutputVal, maxOutputVal);
     }
 
     void setMinOutputVal(int16_t minOutputVal) {

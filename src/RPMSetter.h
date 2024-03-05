@@ -5,5 +5,5 @@ class RPMSetter {
     public:
         virtual int16_t getAimRPM() = 0;
     private:
-        int16_t aimRPM;
+        volatile int16_t aimRPM;
 };
