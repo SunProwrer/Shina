@@ -4,13 +4,13 @@
 //#include <cstring.h>
 #include <AbstractArduinoCommands.h>
 
-class serialIOModule : public IOModule{
+class SerialIOModule : public IOModule{
 public:
-    serialIOModule() {
+    SerialIOModule() {
 
     }
 
-    ~serialIOModule() { }
+    ~SerialIOModule() { }
 
     void sendFactRPM(int16_t rpm) {
         sendDataWithMessage("Fact RPM: ", rpm);

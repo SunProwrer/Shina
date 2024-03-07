@@ -2,15 +2,15 @@
 #include "RPMSetter.h"
 #include <AbstractArduinoCommands.h>
 
-class potentiometerRPMSetter : public RPMSetter {
+class PotentiometerRPMSetter : public RPMSetter {
 public:
-    potentiometerRPMSetter(uint8_t inputPort) {
+    PotentiometerRPMSetter(uint8_t inputPort) {
         this->inputPort = inputPort;
         this->minOutputVal = 0;
         this->maxOutputVal = 1024;
     }
 
-    ~potentiometerRPMSetter() { }
+    ~PotentiometerRPMSetter() { }
 
     int16_t getAimRPM() {
         return map(readAnalogSignal(inputPort), 0, 256, minOutputVal, maxOutputVal);

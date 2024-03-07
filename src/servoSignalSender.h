@@ -3,9 +3,9 @@
 #include <Servo.h>
 #include <Arduino.h>
 
-class servoSignalSender : public MotorSignalSender {
+class ServoSignalSender : public MotorSignalSender {
 public:
-    servoSignalSender(Servo& servo) {
+    ServoSignalSender(Servo& servo) {
         this->servo = &servo;
 
         this->minMicroseconds = 800;
@@ -14,7 +14,7 @@ public:
         this->maxInputVal = 1000;
     }
 
-    ~servoSignalSender() { }
+    ~ServoSignalSender() { }
 
     void setControlVal(int16_t controlVal) {
         int16_t signal = convertToMicroseconds(controlVal);

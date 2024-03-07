@@ -6,9 +6,9 @@
 extern void countRPM();
 extern void setDataPtr(countData& dataPrt);
 
-class hallRPMCouner : public RPMCounter{
+class HallRPMCouner : public RPMCounter{
 public:
-    hallRPMCouner(uint8_t inputPort) {
+    HallRPMCouner(uint8_t inputPort) {
         this->inputPort = inputPort;
         this->minOutputVal = 0;
         this->maxOutputVal = 1024;
@@ -19,7 +19,7 @@ public:
         attachInterrupt(digitalPinToInterrupt(inputPort), countRPM, RISING);
     }
 
-    ~hallRPMCouner() { }
+    ~HallRPMCouner() { }
 
     int16_t getFactRPM() {
         return map(constrain(dataMas.factRPM, 0, 10000), 0, 10000, minOutputVal, maxOutputVal);
