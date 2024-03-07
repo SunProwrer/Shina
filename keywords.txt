@@ -8,6 +8,12 @@ MotorSignalSender KEYWORD1
 IOModule KEYWORD1
 Condition KEYWORD1
 
+PidRegulator KEYWORD1
+HallRPMCouner KEYWORD1
+PotentiometerRPMSetter KEYWORD1
+ServoSignalSender KEYWORD1
+SerialIOModule KEYWORD1
+
 #Названия методов и функций
 
 tick KEYWORD2
@@ -16,3 +22,26 @@ setRPMCounter KEYWORD2
 setRPMSetter KEYWORD2
 setMotorSignalSender KEYWORD2
 setIOModule KEYWORD2
+
+setFactRPM KEYWORD2
+setAimRPM KEYWORD2
+getControlVal KEYWORD2
+setP KEYWORD2
+setI KEYWORD2
+setD KEYWORD2
+setDt KEYWORD2
+
+setMinOutputVal KEYWORD2
+setMaxOutputVal KEYWORD2
+setNumIntPerRoute KEYWORD2
+
+setAbstractCommands KEYWORD2
+setAbstractConsole KEYWORD2
+
+setControlVal KEYWORD2
+setMinInputVal KEYWORD2
+setMaxInputVal KEYWORD2
+setMinMicroseconds KEYWORD2
+setMaxMicroseconds KEYWORD2
+
+getIOSettings KEYWORD2

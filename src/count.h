@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <AbstractArduinoCommands.h>
+#include <Arduino.h>
 
 struct countData
 {

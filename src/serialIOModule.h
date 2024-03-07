@@ -1,16 +1,23 @@
 #pragma once
+#include <stdlib.h>
 #include "IOModule.h"
 #include "condition.h"
 //#include <cstring.h>
-#include <AbstractArduinoCommands.h>
+#include <AbstractConsole.h>
 
 class SerialIOModule : public IOModule{
 public:
-    SerialIOModule() {
+    SerialIOModule() { }
 
+    SerialIOModule(AbstractConsole& console) {
+        this->console = &console;
     }
 
     ~SerialIOModule() { }
+
+    void setAbstractConsole(AbstractConsole& console) {
+        this->console = &console;
+    }
 
     void sendFactRPM(int16_t rpm) {
         sendDataWithMessage("Fact RPM: ", rpm);
@@ -35,8 +42,8 @@ public:
     }
 private:
     void sendDataWithMessage(const char* msg, int16_t val) {
-        consolePrint(msg);
-        consolePrintln(val);
+        console->print(msg);
+        console->println(val);
     }
 
     void readCondition() {
@@ -72,10 +79,10 @@ private:
                     break;
                 
                 default:
-                    consolePrint("Invalid param: \"");
-                    consolePrint(item);
-                    consolePrint(value);
-                    consolePrintln("\"");
+                    console->print("Invalid param: \"");
+                    console->print(item);
+                    console->print(value);
+                    console->println("\"");
                     break;
                 }
             }
@@ -83,5 +90,7 @@ private:
     }
 protected:
     Condition condition;
+private:
+    AbstractConsole* console;
 };
 

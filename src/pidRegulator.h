@@ -1,12 +1,12 @@
 #pragma once
 #include "regulator.h"
 
-class pidRegulator : public Regulator
+class PidRegulator : public Regulator
 {
 public:
-    pidRegulator() : pidRegulator(1, 1, 1, 0.1) {}
+    PidRegulator() : PidRegulator(1, 1, 1, 0.1) {}
 
-    pidRegulator(float kp, float ki, float kd, float dt) {
+    PidRegulator(float kp, float ki, float kd, float dt) {
         this->kp = kp;
         this->ki = ki;
         this->kd = kd;
@@ -17,7 +17,7 @@ public:
         this->d = 0;
     }
 
-    ~pidRegulator() {}
+    ~PidRegulator() {}
 
     void setFactRPM(int16_t rpm) {
         this->factRPM = rpm;

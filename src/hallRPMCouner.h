@@ -1,6 +1,6 @@
 #pragma once
 #include "RPMCounter.h"
-#include <AbstractArduinoCommands.h>
+#include <AbstractCommands.h>
 #include "count.h"
 
 extern void countRPM();

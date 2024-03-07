@@ -42,6 +42,8 @@ public:
         ioModule->sendAimRPM(condition.aimRPM);
         ioModule->sendFactRPM(condition.factRPM);
         ioModule->sendControlVal(condition.controlVal);
+        condition.aimRPM = ioModule->getAimRPM();
+        condition.IOSettings = ioModule->getIOSettings();
     }
 
     void setRegulator(Regulator& regulator) {
