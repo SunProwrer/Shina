@@ -1,5 +1,4 @@
-#ifndef shinaLib
-#define shinaLib
+#pragma once
 #include "condition.h"
 #include "regulator.h"
 #include "RPMCounter.h"
@@ -18,15 +17,13 @@ public:
     }
 
     ~Shina() {
-        if (condition.libSettings & 1)
-        {
+        if (condition.libSettings & 1) {
             delete regulator;
             delete counter;
             delete setter;
             delete signalSender;
             delete ioModule;
         }
-        
     }
 
     void tick() {
@@ -73,5 +70,3 @@ private:
     MotorSignalSender* signalSender;
     IOModule* ioModule;
 };
-
-#endif

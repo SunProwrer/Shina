@@ -48,8 +48,14 @@ private:
 
     void readCondition() {
         if (Serial.available()) {
+
+            console->println("Start parsing");
+
             char buf[24];
             uint8_t kol = Serial.readBytesUntil(';', buf, 24);
+            
+            console->println("Start decripting");
+
             for (uint8_t i = 0; i < kol; i++) {
                 char item = buf[i];
                 char value[8];
@@ -86,6 +92,8 @@ private:
                     break;
                 }
             }
+            
+            console->println("End parsing");
         }
     }
 protected:

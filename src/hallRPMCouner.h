@@ -10,8 +10,8 @@ class HallRPMCouner : public RPMCounter{
 public:
     HallRPMCouner(uint8_t inputPort) {
         this->inputPort = inputPort;
-        this->minOutputVal = 0;
-        this->maxOutputVal = 1024;
+        this->minControlVal = 0;
+        this->maxControlVal = 1024;
 
         dataMas.kolMagnetsPerRoute = 6;
 
@@ -22,15 +22,7 @@ public:
     ~HallRPMCouner() { }
 
     int16_t getFactRPM() {
-        return map(constrain(dataMas.factRPM, 0, 10000), 0, 10000, minOutputVal, maxOutputVal);
-    }
-
-    void setMinOutputVal(int16_t minOutputVal) {
-        this->minOutputVal = minOutputVal;
-    }
-
-    void setMaxOutputVal(int16_t maxOutputVal) {
-        this->maxOutputVal = maxOutputVal;
+        return map(constrain(dataMas.factRPM, 0, 10000), 0, 10000, minControlVal, maxControlVal);
     }
 
     void setNumIntPerRoute(uint8_t ints) {
@@ -39,6 +31,4 @@ public:
 protected:
     countData dataMas;
     uint8_t inputPort;
-    uint16_t minOutputVal;
-    uint16_t maxOutputVal;
 };

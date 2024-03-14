@@ -2,8 +2,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 
-struct countData
-{
+struct countData {
     volatile int16_t factRPM;
     uint8_t kolMagnetsPerRoute;
 };

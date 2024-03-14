@@ -1,8 +1,7 @@
 #pragma once
 #include "regulator.h"
 
-class PidRegulator : public Regulator
-{
+class PidRegulator : public Regulator {
 public:
     PidRegulator() : PidRegulator(1, 1, 1, 0.1) {}
 
@@ -18,14 +17,6 @@ public:
     }
 
     ~PidRegulator() {}
-
-    void setFactRPM(int16_t rpm) {
-        this->factRPM = rpm;
-    }
-
-    void setAimRPM(int16_t rpm) {
-        this->aimRPM = rpm;
-    }
 
     void setP(float kp) {
         this->kp = kp;

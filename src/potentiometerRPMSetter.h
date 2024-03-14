@@ -6,8 +6,8 @@ class PotentiometerRPMSetter : public RPMSetter {
 public:
     PotentiometerRPMSetter(uint8_t inputPort) {
         this->inputPort = inputPort;
-        this->minOutputVal = 0;
-        this->maxOutputVal = 1024;
+        this->minControlVal = 0;
+        this->maxControlVal = 1024;
     }
 
     ~PotentiometerRPMSetter() { }
@@ -17,19 +17,9 @@ public:
     }
 
     int16_t getAimRPM() {
-        return map(hardware->readAnalogSignal(inputPort), 0, 256, minOutputVal, maxOutputVal);
-    }
-
-    void setMinOutputVal(int16_t minOutputVal) {
-        this->minOutputVal = minOutputVal;
-    }
-
-    void setMaxOutputVal(int16_t maxOutputVal) {
-        this->maxOutputVal = maxOutputVal;
+        return map(hardware->readAnalogSignal(inputPort), 0, 256, minControlVal, maxControlVal);
     }
 protected:
     AbstractCommands* hardware;
     uint8_t inputPort;
-    uint16_t minOutputVal;
-    uint16_t maxOutputVal;
 };
