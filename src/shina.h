@@ -36,11 +36,7 @@ public:
 
         signalSender->setControlVal(condition.controlVal);
 
-        ioModule->sendAimRPM(condition.aimRPM);
-        ioModule->sendFactRPM(condition.factRPM);
-        ioModule->sendControlVal(condition.controlVal);
-        condition.aimRPM = ioModule->getAimRPM();
-        condition.IOSettings = ioModule->getIOSettings();
+        ioModule->tick();
     }
 
     void setRegulator(Regulator& regulator) {
@@ -61,6 +57,7 @@ public:
 
     void setIOModule(IOModule& ioModule) {
         this->ioModule = &ioModule;
+        this->ioModule->attachCondition(condition);
     }
 private:
     Condition condition;

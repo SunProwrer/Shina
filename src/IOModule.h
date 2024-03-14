@@ -1,11 +1,11 @@
 #pragma once
 #include <stdint.h>
+#include "condition.h"
+#include <AbstractConsole.h>
 
 class IOModule {
-    public:
-        virtual void sendFactRPM(int16_t rpm) = 0;
-        virtual void sendAimRPM(int16_t rpm) = 0;
-        virtual void sendControlVal(int16_t controlVal) = 0;
-        virtual int16_t getAimRPM() = 0;
-        virtual uint8_t getIOSettings() = 0;
+public:
+    virtual void setAbstractConsole(AbstractConsole& console) = 0;
+    virtual void attachCondition(Condition& condition) = 0;
+    virtual void tick() = 0;
 };

@@ -11,7 +11,7 @@ public:
         this->minMicroseconds = 800;
         this->maxMicroseconds = 2300;
         this->minControlVal = 0;
-        this->maxControlVal = 1000;
+        this->maxControlVal = 1024;
     }
 
     ~ServoSignalSender() { }

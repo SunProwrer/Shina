@@ -17,7 +17,7 @@ public:
     }
 
     int16_t getAimRPM() {
-        return map(hardware->readAnalogSignal(inputPort), 0, 256, minControlVal, maxControlVal);
+        return map(hardware->readAnalogSignal(inputPort), 0, 1024, minControlVal, maxControlVal);
     }
 protected:
     AbstractCommands* hardware;

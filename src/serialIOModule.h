@@ -4,6 +4,7 @@
 #include "condition.h"
 //#include <cstring.h>
 #include <AbstractConsole.h>
+#include <Arduino.h>
 
 class SerialIOModule : public IOModule{
 public:
@@ -19,26 +20,44 @@ public:
         this->console = &console;
     }
 
-    void sendFactRPM(int16_t rpm) {
-        sendDataWithMessage("Fact RPM: ", rpm);
+    void attachCondition(Condition& condition) {
+        this->condition = &condition;
+        this->condition->IOSettings = this->condition->IOSettings | (15);
     }
 
-    void sendAimRPM(int16_t rpm) {
-        sendDataWithMessage("Aim RPM: ", rpm);
-    }
-
-    void sendControlVal(int16_t controlVal) {
-        sendDataWithMessage("Control value: ", controlVal);
-    }
-
-    int16_t getAimRPM() {
+    void tick() {
+        if (bitRead(condition->IOSettings, 2)) sendFactRPM();
+        if (bitRead(condition->IOSettings, 3)) sendAimRPM();
+        if (bitRead(condition->IOSettings, 4)) sendControlVal();
+        console->println(" ");
         readCondition();
-        return condition.aimRPM;
     }
 
-    uint8_t getIOSettings() {
-        readCondition();
-        return condition.IOSettings;
+    void sendFactRPM() {
+        if (bitRead(condition->IOSettings, 5)) {
+            sendDataWithMessage("Fact RPM: ", condition->factRPM);
+        } else {
+            console->print(condition->factRPM);
+            console->print(",");
+        }
+    }
+
+    void sendAimRPM() {
+        if (bitRead(condition->IOSettings, 5)) {
+            sendDataWithMessage("Aim RPM: ", condition->aimRPM);
+        } else {
+            console->print(condition->aimRPM);
+            console->print(",");
+        }
+    }
+
+    void sendControlVal() {
+        if (bitRead(condition->IOSettings, 5)) {
+            sendDataWithMessage("Control value: ", condition->controlVal);
+        } else {
+            console->print(condition->controlVal);
+            console->print(",");
+        }
     }
 private:
     void sendDataWithMessage(const char* msg, int16_t val) {
@@ -52,15 +71,20 @@ private:
             console->println("Start parsing");
 
             char buf[24];
-            uint8_t kol = Serial.readBytesUntil(';', buf, 24);
+            uint8_t kol = Serial.readBytesUntil(';', buf, 23);
+            buf[kol] = '\0';
+            console->println(buf);
+            console->println(kol);
             
             console->println("Start decripting");
+            console->println("i");
 
             for (uint8_t i = 0; i < kol; i++) {
+                console->println(i);
                 char item = buf[i];
                 char value[8];
                 uint8_t j;
-                for (j = 0; buf[++i] != ','; j++) {
+                for (j = 0; buf[++i] != ',' && buf[i] != '\0' ; j++) {
                     value[j] = buf[i];
                 }
                 if (j == 0) continue;
@@ -69,19 +93,22 @@ private:
                 int16_t intVal = atoi(value);
                 switch (item) {
                 case 'r':
-                    condition.aimRPM = intVal;
+                    condition->aimRPM = intVal;
                     break;
                 case 'c':
-                    bitWrite(condition.IOSettings, 1, intVal);
+                    bitWrite(condition->IOSettings, 1, intVal);
                     break;
                 case 'a':
-                    bitWrite(condition.IOSettings, 2, intVal);
+                    bitWrite(condition->IOSettings, 2, intVal);
                     break;
                 case 'f':
-                    bitWrite(condition.IOSettings, 3, intVal);
+                    bitWrite(condition->IOSettings, 3, intVal);
                     break;
                 case 's':
-                    bitWrite(condition.IOSettings, 4, intVal);
+                    bitWrite(condition->IOSettings, 4, intVal);
+                    break;
+                case 'm':
+                    bitWrite(condition->IOSettings, 5, intVal);
                     break;
                 
                 default:
@@ -97,7 +124,7 @@ private:
         }
     }
 protected:
-    Condition condition;
+    Condition* condition;
 private:
     AbstractConsole* console;
 };
