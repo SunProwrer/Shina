@@ -6,9 +6,17 @@
 #include <AbstractConsole.h>
 #include <Arduino.h>
 
+#define ONOFF 1
+#define AIMRPM 2
+#define FACTRPM 3
+#define CONTROLSIGNAL 4
+#define MODE 5
+
 class SerialIOModule : public IOModule{
 public:
-    SerialIOModule() { }
+    SerialIOModule() {
+        this->period = 1000;
+    }
 
     SerialIOModule(AbstractConsole& console) {
         this->console = &console;
@@ -22,62 +30,30 @@ public:
 
     void attachCondition(Condition& condition) {
         this->condition = &condition;
-        this->condition->IOSettings = this->condition->IOSettings | (15);
+        this->condition->IOSettings = this->condition->IOSettings | (0b0011111);
+    }
+
+    void setPeriod(uint16_t period) {
+        this->period = period;
     }
 
     void tick() {
-        if (bitRead(condition->IOSettings, 2)) sendFactRPM();
-        if (bitRead(condition->IOSettings, 3)) sendAimRPM();
-        if (bitRead(condition->IOSettings, 4)) sendControlVal();
-        console->println(" ");
+        if (isTurnOn()) {
+            if (isConsoleMode()) {
+                sendConsoleData();
+            } else {
+                sendPlotterData();
+            }
+        }
         readCondition();
     }
 
-    void sendFactRPM() {
-        if (bitRead(condition->IOSettings, 5)) {
-            sendDataWithMessage("Fact RPM: ", condition->factRPM);
-        } else {
-            console->print(condition->factRPM);
-            console->print(",");
-        }
-    }
-
-    void sendAimRPM() {
-        if (bitRead(condition->IOSettings, 5)) {
-            sendDataWithMessage("Aim RPM: ", condition->aimRPM);
-        } else {
-            console->print(condition->aimRPM);
-            console->print(",");
-        }
-    }
-
-    void sendControlVal() {
-        if (bitRead(condition->IOSettings, 5)) {
-            sendDataWithMessage("Control value: ", condition->controlVal);
-        } else {
-            console->print(condition->controlVal);
-            console->print(",");
-        }
-    }
 private:
-    void sendDataWithMessage(const char* msg, int16_t val) {
-        console->print(msg);
-        console->println(val);
-    }
-
     void readCondition() {
         if (Serial.available()) {
-
-            console->println("Start parsing");
-
             char buf[24];
             uint8_t kol = Serial.readBytesUntil(';', buf, 23);
             buf[kol] = '\0';
-            console->println(buf);
-            console->println(kol);
-            
-            console->println("Start decripting");
-            console->println("i");
 
             for (uint8_t i = 0; i < kol; i++) {
                 console->println(i);
@@ -96,36 +72,137 @@ private:
                     condition->aimRPM = intVal;
                     break;
                 case 'c':
-                    bitWrite(condition->IOSettings, 1, intVal);
+                    setTurnOnOffSetting(intVal);
                     break;
                 case 'a':
-                    bitWrite(condition->IOSettings, 2, intVal);
+                    setPrintAimRPMSetting(intVal);
                     break;
                 case 'f':
-                    bitWrite(condition->IOSettings, 3, intVal);
+                    setPrintFactRPMSetting(intVal);
                     break;
                 case 's':
-                    bitWrite(condition->IOSettings, 4, intVal);
+                    setPrintControlValSetting(intVal);
                     break;
                 case 'm':
-                    bitWrite(condition->IOSettings, 5, intVal);
+                    setModeSetting(intVal);
                     break;
                 
                 default:
-                    console->print("Invalid param: \"");
-                    console->print(item);
-                    console->print(value);
-                    console->println("\"");
+                    sendErrorMessage(item, value);
                     break;
                 }
             }
-            
-            console->println("End parsing");
         }
+    }
+
+    void sendConsoleData() {
+        if (hasPassedPeriod()) {
+            if (isPrintFactRPM()) sendFactRPM();
+            if (isPrintAimRPM()) sendAimRPM();
+            if (isPrintControlVal()) sendControlVal();
+        }
+    }
+
+    void sendPlotterData() {
+        if (isPrintFactRPM()) sendFactRPMPlotter();
+        if (isPrintAimRPM()) sendAimRPMPlotter();
+        if (isPrintControlVal()) sendControlValPlotter();
+        console->println(" ");
+    }
+
+    void sendFactRPM() {
+        sendDataWithMessage("Fact RPM: ", condition->factRPM);
+    }
+
+    void sendAimRPM() {
+        sendDataWithMessage("Aim RPM: ", condition->aimRPM);
+    }
+
+    void sendControlVal() {
+        sendDataWithMessage("Control value: ", condition->controlVal);
+    }
+
+    void sendFactRPMPlotter() {
+        console->print(condition->factRPM);
+        console->print(",");
+    }
+
+    void sendAimRPMPlotter() {
+        console->print(condition->aimRPM);
+        console->print(",");
+    }
+
+    void sendControlValPlotter() {
+        console->print(condition->controlVal);
+        console->print(",");
+    }
+
+    bool hasPassedPeriod() {
+        static uint32_t lastTime = millis();
+        if (millis() - lastTime <= period) {
+            return false;
+        }
+
+        console->println("YES");
+        lastTime = millis();
+        return true;
+    }
+
+    bool isTurnOn() {
+        return bitRead(condition->IOSettings, ONOFF);
+    }
+
+    bool isPrintAimRPM() {
+        return bitRead(condition->IOSettings, AIMRPM);
+    }
+
+    bool isPrintFactRPM() {
+        return bitRead(condition->IOSettings, FACTRPM);
+    }
+
+    bool isPrintControlVal() {
+        return bitRead(condition->IOSettings, CONTROLSIGNAL);
+    }
+
+    bool isConsoleMode() {
+        return bitRead(condition->IOSettings, MODE);
+    }
+
+    void setTurnOnOffSetting(bool val) {
+        bitWrite(condition->IOSettings, ONOFF, val);
+    }
+
+    void setPrintAimRPMSetting(bool val) {
+        bitWrite(condition->IOSettings, AIMRPM, val);
+    }
+
+    void setPrintFactRPMSetting(bool val) {
+        bitWrite(condition->IOSettings, FACTRPM, val);
+    }
+
+    void setPrintControlValSetting(bool val) {
+        bitWrite(condition->IOSettings, CONTROLSIGNAL, val);
+    }
+
+    void setModeSetting(bool val) {
+        bitWrite(condition->IOSettings, MODE, val);
+    }
+
+    void sendDataWithMessage(const char* msg, int16_t val) {
+        console->print(msg);
+        console->println(val);
+    }
+
+    void sendErrorMessage(char item, char* value) {
+        console->print("Invalid param: \"");
+        console->print(item);
+        console->print(value);
+        console->println("\"");
     }
 protected:
     Condition* condition;
 private:
     AbstractConsole* console;
+    uint16_t period = 1000;
 };
 
